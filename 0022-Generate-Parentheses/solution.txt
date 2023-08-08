@@ -1,0 +1,46 @@
+# Intuition
+Given the problem conditions ($$n\le8$$), we can just brute-force all the possible combinations, number of which should be $$2^{2n}\le65536$$.
+# Approach
+Each bracket combination can be encoded by an $$2n$$-bit integer number, where each bit corresponds to either an opening bracket '(' or a closing bracket ')'.
+Looping across all numbers between $$0$$ and $$2^{2n}$$, we check if the current number ($$i$$) encodes a correct combination of brackets. This check is done by scanning bits of $$i$$ e.g., from right (least significant) to left (most significant). During the scan, we increase a counter of the open brackets (variable $$j$$) if the current bit is set to $$1$$, and decrease this counter ($$j$$) otherwise.
+
+A value of variable $$i$$ encodes a correct bracket combination, iff both following conditions are true:
+1) During the scan-loop, the counter $$j$$ is always non-negative (number of opening brackets is not greater than the number of closing brackets).
+2) After the scan-loop is finished, the counter $$j$$ must be equal to $$0$$ (number of the opening brackets equals to the number of closing brackets).
+
+If any of these conditions is not true, the considered combination ($$i$$) must be rejected.
+
+Another little trick/optimization consists in checking the number of bits set to $$1$$ (which must be equal to $$n$$) prior to starting the above mentioned "open-close" check/scan. Conveniently, gcc has a builtin function `__builtin_popcount()` for that.
+
+# Complexity
+- Time complexity: $$O(2^n)$$
+- Space complexity: $$O(2^n)$$
+
+# Code
+```
+char ** generateParenthesis(int n, int* returnSize) {
+    char ** ans = (char**)malloc(12870*sizeof(char*));
+    *returnSize = 0;
+    const int max_i = 1 << (2*n);
+    for (int i = 0; i < max_i; ++i) {
+        if (__builtin_popcount(i) != n) continue;
+        int j = 0;
+        int ii = i;
+        for (int k = 0; j>=0 && k < 2*n; ++k, ii >>= 1) {
+            // Lowest bit of ii: 1 <=> ')', 0 <=> '(' 
+            j += 2 * (ii & 1) - 1; 
+        }
+        if (j == 0 ) {
+            // found correct combination
+            char * combination = malloc(2 * n + 1);
+            ii = i;
+            for (int k = 0; k < 2*n; ++k, ii >>=1) {
+                combination[k] = (ii & 1) ? '(' : ')';                
+            }
+            combination[2*n] = 0;
+            ans[(*returnSize)++] = combination;
+        }  // found branch
+    }  // i-loop
+    return ans;
+}
+```
