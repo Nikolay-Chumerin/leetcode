@@ -59,15 +59,15 @@ void quicksort_with_partition(int arr[], const int left, const int right) {
   quicksort(arr, j + 1, right);
 }
 /**************************************************************/
-void my_quicksort(int *arr, const int beg, const int end) {
-  if (beg >= end)
-    return;
 #ifdef USE_END_FOR_PIVOT
 #define PIVOT_IDX end
 #else
 #define PIVOT_IDX ((beg + end) / 2)
 #endif
-  const int pivot = arr[PIVOT_IDX];
+void my_quicksort(int *arr, const int beg, const int end) {
+  if (beg >= end)
+    return;
+  const int pivot = arr[end];
   int i = beg;
   for (int j = beg; j < end; ++j) {
     const int aj = arr[j];
@@ -76,8 +76,9 @@ void my_quicksort(int *arr, const int beg, const int end) {
     arr[j] = arr[i];
     arr[i++] = aj;
   }
+  const int t = arr[end];
   arr[end] = arr[i];
-  arr[i] = pivot;
+  arr[i] = t;
   my_quicksort(arr, beg, i - 1);
   my_quicksort(arr, i + 1, end);
 } /* my_quicksort(...) */
