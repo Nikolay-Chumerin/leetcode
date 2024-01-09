@@ -73,15 +73,14 @@
 #include <stdbool.h>
 #define MAX_N (1000)
 
-/* Brute-force solution
-Just check all possible subsequences (containing more than 2 elements)
-of the original sequence and check them for being arithmetic.
-Works well for short input sequences, but get out of time already for the
-test#39:
-nums = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], len(nums) = 24
-expected answer 16776915.
-*/
-
+// Brute-force solution
+// Just check all possible subsequences (containing more than 2 elements)
+// of the original sequence and check them for being arithmetic.
+// Works well for short input sequences, but get out of time already for the
+// test#39:
+// nums = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], len(nums) = 24
+// expected answer 16776915.
+/*
 bool bits[MAX_N];
 int inc(const int n) {
   bool carry = true;
@@ -95,7 +94,7 @@ int inc(const int n) {
   return ans;
 }
 
-int numberOfArithmeticSlices(const int* nums, const int n) {
+int numberOfArithmeticSlices1(const int* nums, const int n) {
   memset(bits, false, sizeof(bits));
   int set_bit_num = 0;
   int ans = 0;
@@ -123,6 +122,44 @@ int numberOfArithmeticSlices(const int* nums, const int n) {
     } while (++i < n);
     ans += (i == n);
   } while (set_bit_num);
+  return ans;
+}
+*/
+
+int numberOfArithmeticSlices(const int* nums, const int n) {
+  int ans = 0;
+  int stack[MAX_N];
+  int top = 0;
+  for (int i = 0; i < n - 2; ++i) {
+    const long first_num = nums[i];
+    for (int j = i + 1; j < n - 1; ++j) {
+      const long second_num = nums[j];
+      const long d = second_num - first_num;
+      if (0 == d) {
+        int count = 0;
+        for (int k = j + 1; k < n; ++k) {
+          count += nums[k] == first_num;
+        }
+        ans += (1 << count) - 1;
+        continue;
+      }
+      long next_num = second_num + d;
+      int start_idx = j + 1;
+      do {
+        for (int k = start_idx; k < n; ++k) {
+          if (nums[k] == next_num) {
+            ++ans;
+            stack[top++] = k;
+            next_num += d;
+          }  // next_num found
+        }  // k-loop
+        if (!top) break;
+        const int last_idx = stack[--top];
+        next_num = nums[last_idx];
+        start_idx = last_idx + 1;
+      } while (true);
+    }  // j-loop
+  }  // i-loop
   return ans;
 }
 
