@@ -1,16 +1,18 @@
 {
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "intelliSenseMode": "linux-clang-x64",
-            "cppStandard": "c++11"
-        }
-    ],
+    "configurations": [{
+        "name": "Linux",
+        "includePath": [
+            "${workspaceFolder}/**",
+            "/usr/include",
+            "/usr/local/include",
+            "/usr/lib/gcc/x86_64-linux-gnu/10/include"
+        ],
+        "defines": [],
+        "forcedInclude": ["/usr/include/stdint.h", "/usr/lib/gcc/x86_64-linux-gnu/10/include/stdbool.h"],
+        "compilerPath": "/usr/bin/clang",
+        "cStandard": "c17",
+        "cppStandard": "c++17",
+        "intelliSenseMode": "linux-clang-x64",
+    }],
     "version": 4
 }

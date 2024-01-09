@@ -1,4 +1,7 @@
 {
     "editor.defaultFormatter": "xaver.clang-format",
-    "C_Cpp.clang_format_style": "Google"
+    "C_Cpp.clang_format_style": "Google",
+    "[jsonc]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    }
 }
