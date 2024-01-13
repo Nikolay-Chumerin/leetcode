@@ -1,7 +1,7 @@
 /*
  * @lc app=leetcode id=1026 lang=c
  *
- * [1026] Maximum Difference Between Node and Ancestor
+ *    
  *
  * https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/description/
  *
