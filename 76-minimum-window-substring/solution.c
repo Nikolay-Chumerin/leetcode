@@ -63,6 +63,45 @@
  */
 
 // @lc code=start
+/* Proper sliding window and two pointers solution */
+#define MAX_CHAR 'z'
+typedef int hist_t[MAX_CHAR + 1];  // count of each letter (in some string)
+
+char* minWindow(char* s, char* t) {
+  const int s_len = strlen(s);
+  const int t_len = strlen(t);
+  int best_start_idx = 0;
+  int best_len = s_len + 1;
+  if (s_len < t_len) goto exit;
+
+  // Prepare histogram for the target word (ht)
+  hist_t ht;
+  memset(ht, 0, sizeof(hist_t));
+  for (int i = 0; i < t_len; ++i) ++ht[t[i]];
+
+  int start_idx = 0;
+  int end_idx = 0;
+  int missed_chars_num = t_len;
+
+  while (end_idx < s_len) {
+    missed_chars_num -= (--ht[s[end_idx++]] >= 0);
+
+    while (!missed_chars_num) {
+      const int curr_len = end_idx - start_idx;
+      if (curr_len < best_len) {
+        best_start_idx = start_idx;
+        best_len = curr_len;
+      }
+      missed_chars_num += (++ht[s[start_idx++]] == 1);
+    }  // loop of shrinking window
+  }    // main loop
+exit:
+  s += best_start_idx;
+  s[(best_start_idx + best_len <= s_len) ? best_len : 0] = 0;
+  return s;
+}
+
+/* Bruteforce solution: barely passes time requirenments...
 #define MIN_CHAR 'A'
 #define MAX_CHAR 'z'
 // #define DEBUG
@@ -191,4 +230,5 @@ exit:
   // best_idx);
   return s + best_idx;
 }
+*/
 // @lc code=end
